@@ -1,0 +1,36 @@
+{
+  "projects": [
+    {
+      "name": "Onboarding Refresh",
+      "owner": "Maya Chen",
+      "status": "In progress",
+      "recentActivity": "Drafted the new contributor journey and opened it for team feedback.",
+      "priority": "High",
+      "summary": "Make the first week easier to navigate for every new contributor."
+    },
+    {
+      "name": "Search Insights",
+      "owner": "Jordan Ellis",
+      "status": "At risk",
+      "recentActivity": "Analytics review found a gap in mobile search events; instrumentation is being updated.",
+      "priority": "High",
+      "summary": "Turn search behavior into clearer product decisions."
+    },
+    {
+      "name": "Design System 2.0",
+      "owner": "Priya Nair",
+      "status": "In review",
+      "recentActivity": "The accessibility pass is complete and component documentation is ready for review.",
+      "priority": "Medium",
+      "summary": "Give product teams a consistent, accessible UI foundation."
+    },
+    {
+      "name": "Release Readiness",
+      "owner": "Alex Morgan",
+      "status": "On track",
+      "recentActivity": "QA signed off on the critical path and the release checklist is 80% complete.",
+      "priority": "Medium",
+      "summary": "Coordinate the final checks for a confident, low-friction launch."
+    }
+  ]
+}

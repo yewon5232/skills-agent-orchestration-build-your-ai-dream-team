@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Project Pulse</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-content">
+        <p class="eyebrow">Contributor workspace</p>
+        <h1>Project Pulse</h1>
+        <p class="lede">A quick view of the projects moving the team forward.</p>
+      </div>
+    </header>
+
+    <main>
+      <section class="dashboard-section" aria-labelledby="projects-heading">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Team overview</p>
+            <h2 id="projects-heading">Projects in motion</h2>
+          </div>
+          <p id="project-count" class="project-count" aria-live="polite"></p>
+        </div>
+
+        <div id="project-status" class="state-message" role="status">Loading projects...</div>
+        <div id="project-list" class="dashboard" aria-live="polite" aria-busy="true"></div>
+      </section>
+    </main>
+
+    <template id="project-card-template">
+      <article class="project-card">
+        <div class="card-header">
+          <div>
+            <p class="card-label">Project</p>
+            <h3 class="project-name"></h3>
+          </div>
+          <span class="status-badge"></span>
+        </div>
+        <p class="project-summary"></p>
+        <dl class="project-details">
+          <div>
+            <dt>Owner</dt>
+            <dd class="project-owner"></dd>
+          </div>
+          <div>
+            <dt>Priority</dt>
+            <dd class="project-priority"></dd>
+          </div>
+        </dl>
+        <div class="activity">
+          <p class="card-label">Recent activity</p>
+          <p class="project-activity"></p>
+        </div>
+      </article>
+    </template>
+
+    <script type="module">
+      const list = document.querySelector("#project-list");
+      const statusMessage = document.querySelector("#project-status");
+      const projectCount = document.querySelector("#project-count");
+      const cardTemplate = document.querySelector("#project-card-template");
+
+      function renderProjects(projects) {
+        list.replaceChildren();
+        projects.forEach((project) => {
+          const card = cardTemplate.content.cloneNode(true);
+          card.querySelector(".project-name").textContent = project.name;
+          card.querySelector(".project-summary").textContent = project.summary;
+          card.querySelector(".project-owner").textContent = project.owner;
+          card.querySelector(".project-priority").textContent = project.priority;
+          card.querySelector(".project-activity").textContent = project.recentActivity;
+          card.querySelector(".status-badge").textContent = project.status;
+          card.querySelector(".status-badge").dataset.status = project.status.toLowerCase();
+          list.append(card);
+        });
+
+        projectCount.textContent = `${projects.length} ${projects.length === 1 ? "project" : "projects"}`;
+        statusMessage.hidden = true;
+        list.setAttribute("aria-busy", "false");
+      }
+
+      function showError() {
+        list.replaceChildren();
+        projectCount.textContent = "";
+        statusMessage.hidden = false;
+        statusMessage.setAttribute("role", "alert");
+        statusMessage.textContent = "Projects are unavailable right now. Please refresh and try again.";
+        list.setAttribute("aria-busy", "false");
+      }
+
+      async function loadProjects() {
+        try {
+          const response = await fetch("project-data.json", { cache: "no-store" });
+          if (!response.ok) {
+            throw new Error(`Project data request failed with status ${response.status}`);
+          }
+          const data = await response.json();
+          if (!Array.isArray(data.projects)) {
+            throw new Error("Project data does not contain a projects array");
+          }
+          renderProjects(data.projects);
+        } catch (error) {
+          console.error(error);
+          showError();
+        }
+      }
+
+      loadProjects();
+    </script>
+  </body>
+</html>
